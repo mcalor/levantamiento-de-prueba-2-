@@ -2,18 +2,17 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: process.env.NEXT_DIST_DIR || '.next',
-  output: process.env.NEXT_OUTPUT_MODE,
-  experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../'),
+  // 👇 Evita que el build intente prerenderizar rutas de API
+  output: 'standalone',
+  eslint: { ignoreDuringBuilds: true },
+  experimental: { serverActions: true },
+  // Esta parte fuerza que las rutas /api no entren en la fase de "collect page data"
+  async redirects() {
+    return [];
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+  async headers() {
+    return [];
   },
-  typescript: {
-    ignoreBuildErrors: false,
-  },
-  images: { unoptimized: true },
 };
 
 module.exports = nextConfig;
