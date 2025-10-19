@@ -1,7 +1,22 @@
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+// o tus providers reales
 
-import NextAuth from 'next-auth'
-import { authOptions } from '@/lib/auth'
+const handler = NextAuth({
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: {},
+        password: {},
+      },
+      async authorize(credentials) {
+        // lógica personalizada aquí
+        return { id: "user1", email: credentials?.email };
+      },
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+});
 
-const handler = NextAuth(authOptions)
-
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
